@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
 require('dotenv').config()
 
-// import de rutas
-const authRoutes = require('../routes/auth')
-const dashboadRoutes = require('../routes/dashboard');
-const verifyToken = require('../middlewares/validateToken');
+const routerApi = require('../routes/index');
 
 const app = express();
 
@@ -31,19 +28,8 @@ mongoose.connect(uri, option)
     .then(() => console.log('Base de datos conectada'))
     .catch(e => console.log('error db:', e))
 
-// import routes
 
-//primero se registra el usuario despues valida el token y retorna al admin
-// route middlewares
-app.use('/api/user', authRoutes);
-app.use('/api/dashboard', verifyToken, dashboadRoutes);
-
-app.get('/', (req, res) => {
-    res.json({
-        estado: true,
-        mensaje: 'funciona!'
-    })
-});
+routerApi(app)
 
 // iniciar server
 const PORT = process.env.PORT || 3000;

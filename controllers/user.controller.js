@@ -1,25 +1,13 @@
 const User = require('../models/User');
-const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
-
 const jwt = require('jsonwebtoken');
 
+const { schemaRegister, schemaLogin  } = require('../schemas/user.schema')
 
-
-const schemaRegister = Joi.object({
-    name: Joi.string().min(6).max(255).required(),
-    email: Joi.string().min(6).max(255).required().email(),
-    password: Joi.string().min(6).max(1024).required()
-})
-
-const schemaLogin = Joi.object({
-    email: Joi.string().min(6).max(255).required().email(),
-    password: Joi.string().min(6).max(1024).required()
-})
 
 const registerUser = async (req, res) => {
 
-    const { error }= schemaRegister.validate(req.body)
+    const { error } = schemaRegister.validate(req.body)
 
     if ( error ) {
         return res.status(400).json(
@@ -84,8 +72,18 @@ const loginUser = async (req, res) => {
 
 }
 
+const dashboard = (req, res) => {
+    res.json({
+        data: {
+            title: 'welcome to dashboard',
+            user: req.user
+        }
+    })
+}
+
 module.exports = { 
     registerUser, 
     schemaRegister,
-    loginUser
+    loginUser,
+    dashboard
 }
